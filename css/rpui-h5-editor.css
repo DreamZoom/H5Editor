@@ -1,0 +1,251 @@
+html,body{
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+.rpui-h5-editor{
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+.rpui-h5-header{
+	height: 50px;
+    background-color: #31364a;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 1041;
+    color: #FFFFFF;
+}
+
+.rpui-h5-actions{
+	padding: 10px;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.rpui-h5-actions .btn{
+	padding: 3px 6px;
+}
+.rpui-h5-menubar{
+	text-align: center;
+	width: 50%;
+	margin: auto;
+}
+.rpui-h5-menu-item{
+	padding: 5px 10px;	
+	display: inline-block;
+	cursor: pointer;
+}
+.rpui-h5-menu-item:hover{
+	background: rgba(0,0,0,0.5);
+}
+.rpui-h5-pagelist{
+	position: absolute;
+	top: 50px;
+	left: 0;
+	bottom: 0;
+	border-right: #c1c1c1 1px solid;
+	width: 200px;
+	overflow: hidden;
+}
+
+
+.rpui-page-item{
+	padding: 20px;	
+	text-align: center;
+}
+
+.page-panel{
+	padding: 20px;
+	border-radius:8px;
+}
+.page-panel.selected{
+	background: #97c6ec;
+}
+
+.rpui-page-item .page-thumb{
+	width: 100%;
+	border: 1px #D4D4D4 solid;
+	border-radius:4px;
+}
+
+.rpui-h5-property-grid{
+	position: absolute;
+	bottom: 0;
+	top: 50px;
+	right: 0px;
+	width:260px;
+	background: #f0f3f4;
+}
+.rpui-h5-property-grid .nav {
+    padding-left: 10px;
+    padding-top: 10px;
+    background-color: #76838f; 
+}
+.rpui-h5-property-grid .nav a{
+	color: #FFFFFF;
+}
+.rpui-h5-property-grid .nav li.active a{
+	background: #f0f3f4;
+}
+.scoll-wrapper{
+	height: 100%;
+}
+.rpui-h5-pageeditor{
+	position: absolute;
+	border: 1px #D4D4D4 solid;
+	left: 200px;
+	bottom: 0;
+	top: 50px;
+	right: 260px;
+	overflow: auto;
+}
+.rpui-h5-phone{
+	border: 0;
+    position: relative;
+    background-image: url(phone-4215e3.svg);
+    background-size: 100%;
+    width: 326px;
+    height: 620px;
+    /*left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);*/
+    margin: auto;
+    z-index: 999;
+    /*pointer-events: none;*/
+}
+
+.rpui-h5-phone .page-title{
+	position: absolute;
+	top: 60px;
+	width: 100%;
+}
+.rpui-h5-phone .page-title input{
+	background: transparent;
+	border: none;
+	color: #ffffff;
+	text-align: center;
+	width: 100%;
+}
+.page-container{
+	width: 100%;	
+	position: absolute;
+	top: 96px;
+	bottom: 30px;
+}
+
+.rpui-shape{
+	position: absolute;
+	width: 140px;
+	height: 100px;
+	border: solid 1px #1B6D85;
+}
+
+.rpui-roate{
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	left: calc(50% - 4px);
+	top: -25px;
+	border: 1px solid #1B6D85;
+	background: #fff;
+	border-radius: 100%;
+	cursor:pointer;
+}
+.rpui-roate:before{
+	content: "";
+	position: absolute;
+	height: 16px;
+	width: 1px;
+	background: #1B6D85;
+	left: calc(50% - 0.5px);
+	top: 8px;
+}
+
+.resize-handle:before{
+	content: "";
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	top: calc(50% - 4px);
+	left: calc(50% - 4px);
+	border: 1px solid #1B6D85;
+	background: #fff;
+}
+
+.rpui-draggable {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  cursor: pointer; }
+
+.n-resize {
+  position: absolute;
+  top: -3px;
+  left: 0px;
+  width: 100%;
+  height: 5px;
+  cursor: n-resize; }
+
+.e-resize {
+  position: absolute;
+  top: 0px;
+  left: calc(100% - 2px);
+  width: 5px;
+  height: 100%;
+  cursor: w-resize; }
+
+.s-resize {
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 0px;
+  width: 100%;
+  height: 5px;
+  cursor: s-resize; }
+
+.w-resize {
+  position: absolute;
+  top: 0px;
+  left: -3px;
+  width: 5px;
+  height: 100%;
+  cursor: e-resize; }
+
+.nw-resize {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 7px;
+  height: 7px;
+  cursor: nw-resize; }
+
+.ne-resize {
+  position: absolute;
+  top: -3px;
+  left: calc(100% - 4px);
+  width: 7px;
+  height: 7px;
+  cursor: ne-resize; }
+
+.se-resize {
+  position: absolute;
+  top: calc(100% - 4px);
+  left: calc(100% - 4px);
+  width: 7px;
+  height: 7px;
+  cursor: se-resize; }
+
+.sw-resize {
+  position: absolute;
+  top: calc(100% - 4px);
+  left: -3px;
+  width: 7px;
+  height: 7px;
+  cursor: sw-resize; }
