@@ -250,3 +250,25 @@ angular.module('H5Editor').directive("contenteditable", function() {
 		}
 	};
 });
+
+//属性编辑器
+angular.module('H5Editor').directive("fieldEditor", function() {
+	return {
+		restrict: "E",
+		template: '<div class="field-editor" rpui-drag rpui-resize rpui-roate></div>',
+		link: function(scope, element, attrs, ngModel) {
+
+			function read() {
+				ngModel.$setViewValue(element.html());
+			}
+
+			ngModel.$render = function() {
+				element.html(ngModel.$viewValue || "");
+			};
+
+			element.bind("blur keyup change", function() {
+				scope.$apply(read);
+			});
+		}
+	};
+});

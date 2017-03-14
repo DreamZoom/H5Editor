@@ -51,27 +51,27 @@
 					</div>
 				</div>
 			</div>
-			<div class="rpui-h5-pagelist " ng-controller="pagelist" >
+			<div class="rpui-h5-pagelist " ng-controller="pagelist">
 				<div class="iscroll-wrapper" ng-iscroll='wrapper' ng-iscroll-delay='50'>
-					<div class="iscroll-scroller">
-						<div class="rpui-page-item" ng-repeat="page in pages">
+					<div id="scroller">
+						<div class="rpui-page-item" ng-repeat="page in project.pages">
 							<div class="page-panel" ng-class="{'selected':page.selected}" ng-click="select_page(page)">
 								<img class="page-thumb" ng-src="{{page.page_thumb||'img/default.png' }}" />
 								<span class="page-title">{{page.page_title}}</span>
 							</div>
 						</div>
 					</div>
-					
+
 				</div>
-				
+
 			</div>
 			<div class="rpui-h5-pageeditor" ng-controller="pageEditor">
 				<div class="rpui-h5-phone">
 					<div class="page-title">
-						<input type="text" ng-model="page.page_title" />
+						<input type="text" ng-model="project.selected_page.page_title" />
 					</div>
 					<div class="page-container">
-						<div class="rpui-shape" on-drag="onDrag" ng-style="getStyle(shape)" rpui-drag rpui-resize rpui-roate ng-repeat="shape in page.page_shapes">
+						<div class="rpui-shape" ng-click="select_shape(shape)"  ng-style="getStyle(shape)" rpui-drag rpui-resize rpui-roate ng-repeat="shape in project.selected_page.page_shapes">
 							<div class="rpui-shape-content" contenteditable="true" ng-model="shape.shape_content">
 							</div>
 						</div>
@@ -79,7 +79,7 @@
 				</div>
 
 			</div>
-			<div class="rpui-h5-property-grid"  >
+			<div class="rpui-h5-property-grid">
 				<ul class="nav nav-tabs" role="tablist">
 					<li role="presentation" class="active">
 						<a href="#home" aria-controls="set_style" role="tab" data-toggle="tab">样式</a>
@@ -90,10 +90,19 @@
 				</ul>
 
 				<!-- Tab panes -->
-				<div class="tab-content">
+				<div class="tab-content" ng-controller="propertys">
 					<div role="tabpanel" class="tab-pane active" id="set_style">
-						<ul ng-controller="propertys">
-							<li ng-repeat="field in fields">{{field.propertyName}}:{{shape.propertys[field.propertyName]}}</li>
+						<h3>页面属性</h3>						
+						<ul  ng-if="project.selected_page">
+							<li ng-repeat="(key, value) in project.selected_page.propertys">
+								{{key}}:{{value}}
+							</li>
+						</ul>
+						<h3>元素属性</h3>						
+						<ul  ng-if="project.selected_shape">
+							<li ng-repeat="(key, value) in project.selected_shape.propertys">
+								{{key}}:{{value}}
+							</li>
 						</ul>
 					</div>
 					<div role="tabpanel" class="tab-pane" id="set_animation">

@@ -1,8 +1,18 @@
 (function() {
 
-	var editor = angular.module("H5Editor", ["ngSanitize","ng-iscroll"]);
+	var editor = angular.module("H5Editor", ["ngSanitize", "ng-iscroll"]);
 
 	editor.service("project", function() {
+
+		this.metadata = {
+			"backgroundImage": {
+				displayName: "背景图片",
+				editor: "resource-select",
+				editor_params: {
+					type: "background-image"
+				}
+			}
+		}
 
 		this.project = {
 			project_name: "",
@@ -25,7 +35,7 @@
 					shape_name: "测试",
 					shape_type: "text",
 					propertys: {
-						backgroundImage: "url(img/default.png)",
+						backgroundImage: "",
 						backgroundColor: "#000000",
 						left: 0,
 						top: 0
@@ -72,32 +82,41 @@
 					},
 					selected: false
 				}]
-			}]
-		  
-		
+			}],
+
+			selected_page: null,
+			selected_shape: null,
+			get_selected_page:function(){
+				return this.selected_page || this.pages[0];
+			},
+			get_selected_shape:function(){
+				return this.selected_shape|| this.get_selected_page().page_shapes[0];
+			},
+			get_select_propertys:function(){
+				return (this.selected_shape|| this.get_selected_page()).propertys;
+			}
+
 		};
+
+		this.get_project = function() {
+			return this.project;
+		}
 
 		this.get_page_list = function() {
 			return this.project.pages;
 		}
 
 		this.get_selected_page = function() {
-			var current = null;
-			if (this.get_page_list().length == 0) return null;
-			angular.forEach(this.get_page_list(), function(item, i) {
-				if (item.selected) {
-					current = item;
-				}
-			});
-			return current || this.get_page_list()[0];
+			return this.project.selected_page || this.get_page_list()[0];
 		}
 
 		this.select_page = function(page, index) {
 			angular.forEach(this.get_page_list(), function(item, i) {
 				item.selected = false;
 			});
-
 			page.selected = true;
+			this.project.selected_page = page;
+
 		}
 
 		this.select_shape = function(shape) {
@@ -107,36 +126,28 @@
 				});
 			});
 
-			shape.selected = true;
+			if(shape) {
+				shape.selected = true;
+			}
+			this.project.selected_shape = shape;
 		}
 
 		this.get_selected_shapes = function() {
-			var page = this.get_selected_page();
-			var shape = null;
-			angular.forEach(page.page_shapes, function(item, i) {
-				if (item.selected) {
-					shape = item;
-				}
-			});
-			return shape;
+			return this.project.selected_shape;
 		}
+
+		//init
+		this.project.selected_page = this.get_selected_page();
 
 	});
 
-	editor.controller("pagelist", function($rootScope,$scope, project) {
-		$scope.pages = project.get_page_list();
+	editor.controller("pagelist", function($rootScope, $scope, project) {
+		$scope.project = project.get_project();
 
 		$scope.select_page = function(page) {
 			project.select_page(page);
-			$rootScope.$broadcast("editor-change");
 		}
-		setTimeout(function(){
-			$rootScope.$apply(function(){
-				$rootScope.$broadcast("editor-change");
-			})
-			
-		},0)
-		
+
 	});
 
 	editor.controller("toolbar", function() {
@@ -144,17 +155,17 @@
 	});
 
 	editor.controller("propertys", function($scope, project) {
-        
-        $scope.$on("editor-change",function(){
-        	$scope.page = project.get_selected_page();
-			$scope.shape = project.get_selected_shapes()||$scope.page;
-			$scope.fields = get_fileds($scope.shape.propertys);
-        });
-        
-
-		function get_fileds(o) {
+		$scope.project = project.get_project();
+		$scope.get_fileds = function(shape,page) {
+			var propertys =null;
+			if(shape){
+				propertys = shape.propertys;
+			}
+			else{
+				propertys = page.propertys;
+			}
 			var fields = [];
-			for (var d in o) {
+			for(var d in propertys) {
 				fields.push({
 					propertyName: d,
 					propertyDesc: d
@@ -167,14 +178,12 @@
 
 	editor.controller("pageEditor", function($rootScope, $scope, project) {
 		//$scope.page =$rootScope.selected_page || project.get_selected_page();
-        
-        
-        $scope.$on("editor-change",function(){
-        	$scope.page = project.get_selected_page();
-        });
-        
-		
+		$scope.project = project.get_project();
 
+        $scope.select_shape=function(shape){
+        	project.select_shape(shape);
+        }
+        
 		$scope.getStyle = function(shape) {
 			var style = {};
 			style = angular.extend(style, shape.propertys)
@@ -182,20 +191,20 @@
 		}
 
 		$scope.$on("onDrag", function(e, d) {
-			var shape = project.get_selected_shapes();
+			var shape = $scope.project.get_selected_shape();
 			$scope.$apply(function() {
 				angular.extend(shape.propertys, d);
 			});
 
 		});
 		$scope.$on("onResize", function(e, d) {
-			var shape = project.get_selected_shapes();
+			var shape = $scope.project.get_selected_shape();
 			$scope.$apply(function() {
 				angular.extend(shape.propertys, d);
 			});
 		});
 		$scope.$on("onRoate", function(e, d) {
-			var shape = project.get_selected_shapes();
+			var shape = $scope.project.get_selected_shape();
 			$scope.$apply(function() {
 				angular.extend(shape.propertys, d);
 				shape.propertys.transform = 'rotate(' + shape.propertys.angle + 'deg)';
