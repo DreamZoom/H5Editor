@@ -1,16 +1,24 @@
 (function() {
 
-	var editor = angular.module("H5Editor", ["ngSanitize", "ng-iscroll"]);
+	var editor = angular.module("H5Editor", ["ngSanitize", "ng-iscroll","colorpicker.module",'ui.slider']);
 
 	editor.service("project", function() {
 
 		this.metadata = {
-			"backgroundImage": {
-				displayName: "背景图片",
-				editor: "resource-select",
+			"backgroundColor": {
+				displayName: "背景颜色",
+				editor: "color",
 				editor_params: {
-					type: "background-image"
+					type: ""
 				}
+			},
+			"left":{
+				displayName: "位置x",
+				editor: "value",
+			},
+			"top":{
+				displayName: "位置y",
+				editor: "value",
 			}
 		}
 
@@ -28,9 +36,9 @@
 				selected: true,
 				propertys: {
 					backgroundImage: "",
-					backgroundColor: "#ffffff",
-					animations: []
+					backgroundColor: "#ffffff"					
 				},
+				animations: [],
 				page_shapes: [{
 					shape_name: "测试",
 					shape_type: "text",
@@ -50,9 +58,9 @@
 				selected: false,
 				propertys: {
 					backgroundImage: "",
-					backgroundColor: "#ffffff",
-					animations: []
+					backgroundColor: "#ffffff"			
 				},
+				animations: [],
 				page_shapes: [{
 					shape_name: "测试",
 					shape_type: "text",
@@ -69,17 +77,18 @@
 				selected: false,
 				propertys: {
 					backgroundImage: "",
-					backgroundColor: "#ffffff",
-					animations: []
+					backgroundColor: "#ffffff"					
 				},
+				animations: [],
 				page_shapes: [{
 					shape_name: "测试",
 					shape_type: "text",
 					propertys: {
 						backgroundImage: "",
-						backgroundColor: "#ffffff",
-						animations: []
+						backgroundColor: "#ffffff"
+						
 					},
+					animations: [],
 					selected: false
 				}]
 			}],
@@ -135,6 +144,10 @@
 		this.get_selected_shapes = function() {
 			return this.project.selected_shape;
 		}
+		
+		this.get_metadata=function(){
+			return this.metadata;
+		}
 
 		//init
 		this.project.selected_page = this.get_selected_page();
@@ -173,6 +186,17 @@
 			}
 			return fields;
 		}
+		
+		$scope.get_metadata=function(filedName){
+			console.log(filedName)
+			return project.get_metadata()[filedName]||{
+				dispalyName:filedName,
+				editor:"default",
+				editor_params:{}
+			}
+		}
+		
+		
 
 	});
 

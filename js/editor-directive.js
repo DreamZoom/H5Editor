@@ -2,8 +2,8 @@ angular.module('H5Editor')
 	.directive("rpuiDrag", function($document) {
 		return {
 			restrict: 'A',
-			scope:{
-				onDrag:"&"
+			scope: {
+				onDrag: "&"
 			},
 			link: function($scope, $element, $attr) {
 				var startX = 0,
@@ -25,12 +25,12 @@ angular.module('H5Editor')
 						top: y + "px",
 						left: x + "px"
 					});
-					
+
 					$scope.$emit('onDrag', {
-						top: y + "px",
-						left: x + "px"
+						top: y ,
+						left: x 
 					});
-					
+
 				}
 
 				function mouseup() {
@@ -62,27 +62,27 @@ angular.module('H5Editor')
 				var radina = Math.acos(cos); //用反三角函数求弧度
 				var angle = Math.floor(180 / (Math.PI / radina)); //将弧度转换成角度
 
-				if (mx > px && my > py) { //鼠标在第四象限
+				if(mx > px && my > py) { //鼠标在第四象限
 					angle = 180 - angle;
 				}
 
-				if (mx == px && my > py) { //鼠标在y轴负方向上
+				if(mx == px && my > py) { //鼠标在y轴负方向上
 					angle = 180;
 				}
 
-				if (mx > px && my == py) { //鼠标在x轴正方向上
+				if(mx > px && my == py) { //鼠标在x轴正方向上
 					angle = 90;
 				}
 
-				if (mx < px && my > py) { //鼠标在第三象限
+				if(mx < px && my > py) { //鼠标在第三象限
 					angle = 180 + angle;
 				}
 
-				if (mx < px && my == py) { //鼠标在x轴负方向
+				if(mx < px && my == py) { //鼠标在x轴负方向
 					angle = 270;
 				}
 
-				if (mx < px && my < py) { //鼠标在第二象限
+				if(mx < px && my < py) { //鼠标在第二象限
 					angle = 360 - angle;
 				}
 				console.log($element[0].offsetLeft);
@@ -96,11 +96,11 @@ angular.module('H5Editor')
 				};
 				var angle = (getAngle(center.x, center.y, $event.pageX, $event.pageY));
 				$element.css({
-					transform: 'rotate(' +  angle+ 'deg)'
+					transform: 'rotate(' + angle + 'deg)'
 				});
-				
+
 				$scope.$emit('onRoate', {
-					angle:angle
+					angle: angle
 				});
 			}
 
@@ -118,27 +118,27 @@ angular.module('H5Editor')
 				var offset = $event.pageY - $startevent.pageY;
 				var top = $position.top + offset;
 				var height = $position.height - offset;
-				if (height < 20) return;
+				if(height < 20) return;
 				$element.css({
 					top: top + "px",
 					height: height + "px"
 				});
-				
+
 				$scope.$emit('onResize', {
-					top: top + "px",
-					height: height + "px"
+					top: top ,
+					height: height 
 				});
 			};
 
 			var resizeDown = function($event, $startevent, $handle, $position) {
 				var offset = $event.pageY - $startevent.pageY;
 				var height = $position.height + offset;
-				if (height < 20) return;
+				if(height < 20) return;
 				$element.css({
 					height: height + "px"
 				});
 				$scope.$emit('onResize', {
-					height: height + "px"
+					height: height 
 				});
 			};
 
@@ -146,27 +146,27 @@ angular.module('H5Editor')
 				var offset = $event.pageX - $startevent.pageX;
 				var left = $position.left + offset;
 				var width = $position.width - offset;
-				if (width < 20) return;
+				if(width < 20) return;
 				$element.css({
-					left: left + "px",
+					left: left+ "px",
 					width: width + "px"
 				});
-				
+
 				$scope.$emit('onResize', {
-					left: left + "px",
-					width: width + "px"
+					left: left ,
+					width: width 
 				});
 			};
 
 			var resizeRight = function($event, $startevent, $handle, $position) {
 				var offset = $event.pageX - $startevent.pageX;
 				var width = $position.width + offset;
-				if (width < 20) return;
+				if(width < 20) return;
 				$element.css({
 					width: width + "px"
 				});
 				$scope.$emit('onResize', {
-					width: width + "px"
+					width: width 
 				});
 			};
 
@@ -252,23 +252,40 @@ angular.module('H5Editor').directive("contenteditable", function() {
 });
 
 //属性编辑器
+angular.module('H5Editor').directive("colorEditor", function() {
+	return {
+		restrict: "E",
+		scope: {
+			color: "="
+		},
+		template: '<div class="integer-editor"><input colorpicker="rgba" type="text" ng-model="textColor" /></div>',
+		controller:function($scope, project){
+			$scope.$watch("textColor",function(newValue,oldValue){
+				$scope.color = $scope.textColor;
+			});
+		}
+	};
+});
+
 angular.module('H5Editor').directive("fieldEditor", function() {
 	return {
 		restrict: "E",
-		template: '<div class="field-editor" rpui-drag rpui-resize rpui-roate></div>',
-		link: function(scope, element, attrs, ngModel) {
-
-			function read() {
-				ngModel.$setViewValue(element.html());
+		scope: {
+			field: "@",
+			model: "="
+		},
+		template: '<div class="field-editor"><span>{{fieldMetadata.displayName}}</span><span ng-if="fieldMetadata.editor==\'color\'"><color-editor color="testColor"></color-editor></span></div>',
+		controller: function($scope, project) {
+			$scope.fieldMetadata = project.get_metadata()[$scope.field] || {
+				dispalyName: $scope.field,
+				editor: "default",
+				editor_params: {}
 			}
-
-			ngModel.$render = function() {
-				element.html(ngModel.$viewValue || "");
-			};
-
-			element.bind("blur keyup change", function() {
-				scope.$apply(read);
-			});
+			$scope.testColor ="rgba(0,0,0,0)"
+			
+			
+//          $scope.project = project.get_project();
+			
 		}
 	};
 });

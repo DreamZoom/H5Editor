@@ -10,9 +10,12 @@
 		<link rel="stylesheet" type="text/css" href="libs/bootstrap-3.3.5-dist/css/bootstrap-theme.css" />
 		<link rel="stylesheet" type="text/css" href="libs/angular-1.5.9/angular-csp.css" />
 		<link rel="stylesheet" type="text/css" href="libs/angular-ui/ui-bootstrap-csp.css" />
+		<link rel="stylesheet" type="text/css" href="libs/angular-bootstrap-colorpicker/css/colorpicker.css"/>
 		<link rel="stylesheet" type="text/css" href="css/rpui-h5-editor.css" />
+		<link rel="stylesheet" type="text/css" href="libs/jquery-ui-1.12.1/jquery-ui.css"/>
 
 		<script src="libs/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="libs/jquery-ui-1.12.1/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/bootstrap-3.3.5-dist/js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/angular-1.5.9/angular.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/angular-1.5.9/angular-sanitize.min.js" type="text/javascript" charset="utf-8"></script>
@@ -20,8 +23,10 @@
 		<script src="libs/iscoll/iscroll.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/ng-iscroll/ng-iscroll.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/angular-iscroll/angular-iscroll.js" type="text/javascript" charset="utf-8"></script>
+		<script src="libs/slider.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/angular-ui/ui-bootstrap.js" type="text/javascript" charset="utf-8"></script>
 		<script src="libs/angular-ui/ui-bootstrap-tpls.js" type="text/javascript" charset="utf-8"></script>
+		<script src="libs/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/h5-editor.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/editor-directive.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/app-scroll.js" type="text/javascript" charset="utf-8"></script>
@@ -95,13 +100,28 @@
 						<h3>页面属性</h3>						
 						<ul  ng-if="project.selected_page">
 							<li ng-repeat="(key, value) in project.selected_page.propertys">
-								{{key}}:{{value}}
+								
 							</li>
 						</ul>
 						<h3>元素属性</h3>						
 						<ul  ng-if="project.selected_shape">
 							<li ng-repeat="(key, value) in project.selected_shape.propertys">
-								{{key}}:{{value}}
+								<div class="" ng-init="metadata = get_metadata(key)">
+									<span>
+										{{metadata.displayName}}
+									</span>
+									<span>
+										<span ng-if="metadata.editor=='color'">
+											<input colorpicker="rgba" type="text" ng-model="project.selected_shape.propertys[key]" />
+										</span>
+										<span ng-if="metadata.editor=='value'">
+											<div ui-slider data-min="0" data-max="80" data-tip ng-model="project.selected_shape.propertys[key]"></div>
+										</span>
+										<span ng-if="metadata.editor=='text'">
+											<input  type="text" ng-model="project.selected_shape.propertys[key]" />
+										</span>
+									</span>
+								</div>
 							</li>
 						</ul>
 					</div>
